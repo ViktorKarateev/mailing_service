@@ -1,34 +1,42 @@
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Client
+from .mixins import OwnerAccessMixin
 
-class ClientListView(ListView):
+
+class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = 'mailings/client_list.html'
-    context_object_name = 'clients'
 
-class ClientDetailView(DetailView):
+    def get_queryset(self):
+        return Client.objects.filter(owner=self.request.user)
+
+
+class ClientDetailView(OwnerAccessMixin, DetailView):
     model = Client
     template_name = 'mailings/client_detail.html'
-    context_object_name = 'client'
 
-class ClientCreateView(CreateView):
+
+class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
-    template_name = 'mailings/client_form.html'
     fields = ['email', 'full_name', 'comment']
+    template_name = 'mailings/client_form.html'
     success_url = reverse_lazy('mailings:client_list')
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
-class ClientUpdateView(UpdateView):
+
+class ClientUpdateView(OwnerAccessMixin, UpdateView):
     model = Client
-    template_name = 'mailings/client_form.html'
     fields = ['email', 'full_name', 'comment']
+    template_name = 'mailings/client_form.html'
     success_url = reverse_lazy('mailings:client_list')
 
-class ClientDeleteView(DeleteView):
+
+class ClientDeleteView(OwnerAccessMixin, DeleteView):
     model = Client
     template_name = 'mailings/client_confirm_delete.html'
     success_url = reverse_lazy('mailings:client_list')
