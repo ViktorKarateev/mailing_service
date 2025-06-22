@@ -1,0 +1,21 @@
+{% extends 'mailings/base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Информация о рассылке</h1>
+
+<p><strong>Дата начала:</strong> {{ object.start_time }}</p>
+<p><strong>Дата окончания:</strong> {{ object.end_time }}</p>
+<p><strong>Статус:</strong> {{ object.get_status_display }}</p>
+<p><strong>Сообщение:</strong> {{ object.message.subject }}</p>
+
+<p><strong>Клиенты:</strong></p>
+<ul>
+  {% for client in object.clients.all %}
+    <li>{{ client.full_name }} ({{ client.email }})</li>
+  {% endfor %}
+</ul>
+
+<a class="btn btn-primary" href="{% url 'mailings:mailing_update' object.pk %}">Редактировать</a>
+<a class="btn btn-danger" href="{% url 'mailings:mailing_delete' object.pk %}">Удалить</a>
+<a class="btn btn-secondary" href="{% url 'mailings:mailing_list' %}">Назад к списку</a>
+{% endblock %}

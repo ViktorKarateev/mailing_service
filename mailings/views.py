@@ -4,7 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Client
 from .mixins import OwnerAccessMixin
 from .models import Message
-
+from .models import Mailing
+from .forms import MailingForm
 
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
@@ -78,4 +79,42 @@ class MessageDeleteView(OwnerAccessMixin, DeleteView):
     model = Message
     template_name = 'mailings/message_confirm_delete.html'
     success_url = reverse_lazy('mailings:message_list')
+
+
+class MailingListView(LoginRequiredMixin, ListView):
+    model = Mailing
+    template_name = 'mailings/mailing_list.html'
+
+    def get_queryset(self):
+        return Mailing.objects.filter(owner=self.request.user)
+
+
+class MailingDetailView(OwnerAccessMixin, DetailView):
+    model = Mailing
+    template_name = 'mailings/mailing_detail.html'
+
+
+class MailingCreateView(LoginRequiredMixin, CreateView):
+    model = Mailing
+    form_class = MailingForm
+    template_name = 'mailings/mailing_form.html'
+    success_url = reverse_lazy('mailings:mailing_list')
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+
+class MailingUpdateView(OwnerAccessMixin, UpdateView):
+    model = Mailing
+    form_class = MailingForm
+    template_name = 'mailings/mailing_form.html'
+    success_url = reverse_lazy('mailings:mailing_list')
+
+
+class MailingDeleteView(OwnerAccessMixin, DeleteView):
+    model = Mailing
+    template_name = 'mailings/mailing_confirm_delete.html'
+    success_url = reverse_lazy('mailings:mailing_list')
+
 
