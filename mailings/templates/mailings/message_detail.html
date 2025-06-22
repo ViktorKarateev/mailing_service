@@ -1,0 +1,10 @@
+{% extends 'mailings/base.html' %}
+
+{% block content %}
+<h1>{{ object.subject }}</h1>
+<p>{{ object.body }}</p>
+
+<a class="btn btn-warning" href="{% url 'mailings:message_update' object.pk %}">Редактировать</a>
+<a class="btn btn-danger" href="{% url 'mailings:message_delete' object.pk %}">Удалить</a>
+<a class="btn btn-secondary" href="{% url 'mailings:message_list' %}">Назад</a>
+{% endblock %}
