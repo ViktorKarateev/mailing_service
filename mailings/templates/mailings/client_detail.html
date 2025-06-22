@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Информация о клиенте</h1>
+<p><strong>ФИО:</strong> {{ client.full_name }}</p>
+<p><strong>Email:</strong> {{ client.email }}</p>
+<p><strong>Комментарий:</strong> {{ client.comment }}</p>
+
+<a class="btn btn-primary" href="{% url 'mailings:client_update' client.pk %}">Редактировать</a>
+<a class="btn btn-danger" href="{% url 'mailings:client_delete' client.pk %}">Удалить</a>
+<a class="btn btn-secondary" href="{% url 'mailings:client_list' %}">Назад к списку</a>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Клиенты</h1>
+<a class="btn btn-success mb-3" href="{% url 'mailings:client_create' %}">Добавить клиента</a>
+
+<ul class="list-group">
+    {% for client in clients %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <a href="{% url 'mailings:client_detail' client.pk %}">
+                    {{ client.full_name }} ({{ client.email }})
+                </a>
+            </div>
+            <div>
+                <a href="{% url 'mailings:client_update' client.pk %}" class="btn btn-sm btn-outline-primary">Редактировать</a>
+                <a href="{% url 'mailings:client_delete' client.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
+            </div>
+        </li>
+    {% empty %}
+        <li class="list-group-item">Клиентов пока нет.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
