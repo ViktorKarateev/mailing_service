@@ -1,0 +1,15 @@
+{% extends 'mailings/base.html' %}
+
+{% block content %}
+<h2>Профиль</h2>
+
+<p><strong>Email:</strong> {{ user.email }}</p>
+<p><strong>Телефон:</strong> {{ user.phone }}</p>
+<p><strong>Страна:</strong> {{ user.country.name }}</p>
+
+{% if user.avatar %}
+    <p><img src="{{ user.avatar.url }}" alt="Аватар" width="150"></p>
+{% endif %}
+
+<a href="{% url 'users:profile_edit' %}">Редактировать профиль</a>
+{% endblock %}

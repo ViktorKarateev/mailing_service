@@ -1,12 +1,19 @@
 from typing import Any
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import (
+    ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+)
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views import View
+from django.core.mail import send_mail
+from django.contrib import messages
+from django.shortcuts import redirect, get_object_or_404
+
 from .mixins import OwnerAccessMixin
 from .models import Message, Mailing, Attempt, Client
 from .forms import MailingForm
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 
 
 class HomeView(TemplateView):
@@ -144,3 +151,39 @@ class AttemptListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Attempt.objects.filter(mailing__owner=self.request.user)
+
+
+# Отправка рассылки
+class SendMailingView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        mailing = get_object_or_404(Mailing, pk=pk, owner=request.user)
+        subject = mailing.message.subject
+        body = mailing.message.body
+        success_count = 0
+        fail_count = 0
+
+        for client in mailing.clients.all():
+            try:
+                send_mail(
+                    subject,
+                    body,
+                    request.user.email,
+                    [client.email],
+                    fail_silently=False,
+                )
+                Attempt.objects.create(
+                    mailing=mailing,
+                    status='Успешно',
+                    server_response='OK',
+                )
+                success_count += 1
+            except Exception as e:
+                Attempt.objects.create(
+                    mailing=mailing,
+                    status='Не успешно',
+                    server_response=str(e),
+                )
+                fail_count += 1
+
+        messages.success(request, f'Успешно: {success_count}, Ошибок: {fail_count}')
+        return redirect('mailings:mailing_detail', pk=mailing.pk)

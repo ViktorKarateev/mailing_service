@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'mailings',
+    'django_countries',
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
