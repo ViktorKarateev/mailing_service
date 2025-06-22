@@ -1,0 +1,7 @@
+{% extends 'mailings/base.html' %}
+
+{% block content %}
+<h2>Выход из системы</h2>
+<p>Вы успешно вышли из аккаунта.</p>
+<p><a href="{% url 'users:login' %}">Войти снова</a></p>
+{% endblock %}
