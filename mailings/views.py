@@ -1,13 +1,24 @@
+from typing import Any
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Client
 from .mixins import OwnerAccessMixin
-from .models import Message
-from .models import Mailing
+from .models import Message, Mailing, Attempt, Client
 from .forms import MailingForm
-from .models import Attempt
 
+
+class HomeView(TemplateView):
+    template_name = 'mailings/home.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict:
+        context = super().get_context_data(**kwargs)
+        context['total_mailings'] = Mailing.objects.count()
+        context['active_mailings'] = Mailing.objects.filter(status='launched').count()
+        context['unique_clients'] = Client.objects.values('email').distinct().count()
+        return context
+
+
+# Клиенты
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = 'mailings/client_list.html'
@@ -45,6 +56,7 @@ class ClientDeleteView(OwnerAccessMixin, DeleteView):
     success_url = reverse_lazy('mailings:client_list')
 
 
+# Сообщения
 class MessageListView(LoginRequiredMixin, ListView):
     model = Message
     template_name = 'mailings/message_list.html'
@@ -82,6 +94,7 @@ class MessageDeleteView(OwnerAccessMixin, DeleteView):
     success_url = reverse_lazy('mailings:message_list')
 
 
+# Рассылки
 class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
     template_name = 'mailings/mailing_list.html'
@@ -119,11 +132,10 @@ class MailingDeleteView(OwnerAccessMixin, DeleteView):
     success_url = reverse_lazy('mailings:mailing_list')
 
 
+# Попытки рассылки
 class AttemptListView(LoginRequiredMixin, ListView):
     model = Attempt
     template_name = 'mailings/attempt_list.html'
 
     def get_queryset(self):
         return Attempt.objects.filter(mailing__owner=self.request.user)
-
-

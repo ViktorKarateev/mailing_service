@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import (MailingListView,MailingDetailView,MailingCreateView,MailingUpdateView,MailingDeleteView,AttemptListView)
+from .views import (HomeView,MailingListView,MailingDetailView,MailingCreateView,MailingUpdateView,MailingDeleteView,AttemptListView)
 
 app_name = 'mailings'
 
@@ -25,4 +25,6 @@ urlpatterns = [
     path('mailings/<int:pk>/delete/', MailingDeleteView.as_view(), name='mailing_delete'),
 
     path('attempts/', AttemptListView.as_view(), name='attempt_list'),
+
+    path('', HomeView.as_view(), name='home'),
 ]

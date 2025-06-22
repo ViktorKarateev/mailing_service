@@ -1,0 +1,11 @@
+{% extends 'mailings/base.html' %}
+
+{% block content %}
+<h1>Добро пожаловать в сервис рассылок!</h1>
+
+<ul class="list-group mt-3">
+    <li class="list-group-item">Всего рассылок: {{ total_mailings }}</li>
+    <li class="list-group-item">Активных рассылок: {{ active_mailings }}</li>
+    <li class="list-group-item">Уникальных клиентов: {{ unique_clients }}</li>
+</ul>
+{% endblock %}
