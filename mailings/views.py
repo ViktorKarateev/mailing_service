@@ -5,6 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixins import OwnerAccessMixin
 from .models import Message, Mailing, Attempt, Client
 from .forms import MailingForm
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 class HomeView(TemplateView):
@@ -19,6 +21,7 @@ class HomeView(TemplateView):
 
 
 # Клиенты
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = 'mailings/client_list.html'
@@ -57,6 +60,7 @@ class ClientDeleteView(OwnerAccessMixin, DeleteView):
 
 
 # Сообщения
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class MessageListView(LoginRequiredMixin, ListView):
     model = Message
     template_name = 'mailings/message_list.html'
@@ -95,6 +99,7 @@ class MessageDeleteView(OwnerAccessMixin, DeleteView):
 
 
 # Рассылки
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
     template_name = 'mailings/mailing_list.html'
