@@ -6,6 +6,7 @@ from .mixins import OwnerAccessMixin
 from .models import Message
 from .models import Mailing
 from .forms import MailingForm
+from .models import Attempt
 
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
@@ -116,5 +117,13 @@ class MailingDeleteView(OwnerAccessMixin, DeleteView):
     model = Mailing
     template_name = 'mailings/mailing_confirm_delete.html'
     success_url = reverse_lazy('mailings:mailing_list')
+
+
+class AttemptListView(LoginRequiredMixin, ListView):
+    model = Attempt
+    template_name = 'mailings/attempt_list.html'
+
+    def get_queryset(self):
+        return Attempt.objects.filter(mailing__owner=self.request.user)
 
 

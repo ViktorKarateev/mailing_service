@@ -1,0 +1,31 @@
+{% extends 'mailings/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Попытки рассылок</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Рассылка</th>
+        <th>Дата и время</th>
+        <th>Статус</th>
+        <th>Ответ сервера</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for attempt in object_list %}
+      <tr>
+        <td>{{ attempt.mailing }}</td>
+        <td>{{ attempt.timestamp }}</td>
+        <td>{{ attempt.status }}</td>
+        <td>{{ attempt.server_response }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4">Нет данных о попытках рассылки.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

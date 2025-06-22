@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class Client(models.Model):
     email = models.EmailField(unique=True, verbose_name='Email')
     full_name = models.CharField(max_length=255, verbose_name='ФИО')
@@ -84,3 +85,17 @@ class MailingLog(models.Model):
     class Meta:
         verbose_name = 'Лог рассылки'
         verbose_name_plural = 'Логи рассылок'
+
+
+class Attempt(models.Model):
+    mailing = models.ForeignKey('Mailing', on_delete=models.CASCADE, related_name='attempts', verbose_name='Рассылка')
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время')
+    status = models.CharField(max_length=100, verbose_name='Статус')
+    server_response = models.TextField(blank=True, verbose_name='Ответ сервера')
+
+    class Meta:
+        verbose_name = 'Попытка рассылки'
+        verbose_name_plural = 'Попытки рассылки'
+
+    def __str__(self):
+        return f'Попытка от {self.timestamp} для {self.mailing}'
