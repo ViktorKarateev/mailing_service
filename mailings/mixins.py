@@ -4,6 +4,14 @@ from django.core.exceptions import PermissionDenied
 class OwnerAccessMixin(LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
-        if obj.owner != request.user:
-            raise PermissionDenied
-        return super().dispatch(request, *args, **kwargs)
+        user = request.user
+
+        if obj.owner == user:
+            return super().dispatch(request, *args, **kwargs)
+
+        if user.groups.filter(name='Менеджеры').exists():
+            if request.method in ('GET', 'HEAD'):
+                return super().dispatch(request, *args, **kwargs)
+            raise PermissionDenied("Менеджерам запрещено изменять чужие объекты.")
+
+        raise PermissionDenied("Доступ запрещён.")
