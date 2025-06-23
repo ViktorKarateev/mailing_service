@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Client, Message, Mailing, MailingLog
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
+from .models import Client, Message, Mailing, MailingLog, Attempt
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
@@ -22,3 +24,18 @@ class MailingAdmin(admin.ModelAdmin):
 class MailingLogAdmin(admin.ModelAdmin):
     list_display = ('attempt_time', 'status', 'mailing')
     list_filter = ('status', 'mailing')
+
+
+def setup_manager_group():
+    group, _ = Group.objects.get_or_create(name='Менеджеры')
+
+    for model in [Client, Message, Mailing, Attempt]:
+        content_type = ContentType.objects.get_for_model(model)
+        permission = Permission.objects.filter(
+            content_type=content_type,
+            codename__startswith='can_view_all_'
+        ).first()
+        if permission:
+            group.permissions.add(permission)
+
+setup_manager_group()
