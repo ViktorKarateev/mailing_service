@@ -182,6 +182,7 @@ class SendMailingView(LoginRequiredMixin, View):
                 )
                 Attempt.objects.create(
                     mailing=mailing,
+                    client=client,  # ← добавлено
                     status='Успешно',
                     server_response='OK',
                 )
@@ -189,6 +190,7 @@ class SendMailingView(LoginRequiredMixin, View):
             except Exception as e:
                 Attempt.objects.create(
                     mailing=mailing,
+                    client=client,  # ← добавлено
                     status='Не успешно',
                     server_response=str(e),
                 )

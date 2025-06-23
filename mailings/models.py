@@ -97,7 +97,19 @@ class MailingLog(models.Model):
 
 
 class Attempt(models.Model):
-    mailing = models.ForeignKey('Mailing', on_delete=models.CASCADE, related_name='attempts', verbose_name='Рассылка')
+    mailing = models.ForeignKey(
+        'Mailing',
+        on_delete=models.CASCADE,
+        related_name='attempts',
+        verbose_name='Рассылка'
+    )
+    client = models.ForeignKey(
+        'Client',
+        on_delete=models.CASCADE,
+        verbose_name='Клиент',
+        null=True,  # ← разрешаем пустое значение в базе
+        blank=True  # ← разрешаем не указывать в формах
+    )
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время')
     status = models.CharField(max_length=100, verbose_name='Статус')
     server_response = models.TextField(blank=True, verbose_name='Ответ сервера')
@@ -107,4 +119,4 @@ class Attempt(models.Model):
         verbose_name_plural = 'Попытки рассылки'
 
     def __str__(self):
-        return f'Попытка от {self.timestamp} для {self.mailing}'
+        return f'Попытка от {self.timestamp} для {self.client.email}'
