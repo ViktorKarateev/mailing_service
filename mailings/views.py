@@ -31,7 +31,10 @@ class ClientListView(LoginRequiredMixin, ListView):
     template_name = 'mailings/client_list.html'
 
     def get_queryset(self):
-        return Client.objects.filter(owner=self.request.user)
+        user = self.request.user
+        if user.groups.filter(name='Менеджеры').exists():
+            return Client.objects.all()
+        return Client.objects.filter(owner=user)
 
 
 class ClientDetailView(OwnerAccessMixin, DetailView):
@@ -70,7 +73,10 @@ class MessageListView(LoginRequiredMixin, ListView):
     template_name = 'mailings/message_list.html'
 
     def get_queryset(self):
-        return Message.objects.filter(owner=self.request.user)
+        user = self.request.user
+        if user.groups.filter(name='Менеджеры').exists():
+            return Message.objects.all()
+        return Message.objects.filter(owner=user)
 
 
 class MessageDetailView(OwnerAccessMixin, DetailView):
@@ -109,7 +115,10 @@ class MailingListView(LoginRequiredMixin, ListView):
     template_name = 'mailings/mailing_list.html'
 
     def get_queryset(self):
-        return Mailing.objects.filter(owner=self.request.user)
+        user = self.request.user
+        if user.groups.filter(name='Менеджеры').exists():
+            return Mailing.objects.all()
+        return Mailing.objects.filter(owner=user)
 
 
 class MailingDetailView(OwnerAccessMixin, DetailView):
@@ -147,7 +156,10 @@ class AttemptListView(LoginRequiredMixin, ListView):
     template_name = 'mailings/attempt_list.html'
 
     def get_queryset(self):
-        return Attempt.objects.filter(mailing__owner=self.request.user)
+        user = self.request.user
+        if user.groups.filter(name='Менеджеры').exists():
+            return Attempt.objects.all()
+        return Attempt.objects.filter(mailing__owner=user)
 
 
 # Отправка рассылки
