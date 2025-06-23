@@ -1,8 +1,6 @@
 from typing import Any
 from django.urls import reverse_lazy
-from django.views.generic import (
-    ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-)
+from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -10,7 +8,6 @@ from django.views import View
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
-
 from .mixins import OwnerAccessMixin
 from .models import Message, Mailing, Attempt, Client
 from .forms import MailingForm
