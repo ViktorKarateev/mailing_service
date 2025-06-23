@@ -3,11 +3,13 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from .models import Client, Message, Mailing, MailingLog, Attempt
 
+
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ('email', 'full_name', 'owner')
     search_fields = ('email', 'full_name')
     list_filter = ('owner',)
+
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
@@ -15,10 +17,12 @@ class MessageAdmin(admin.ModelAdmin):
     search_fields = ('subject',)
     list_filter = ('owner',)
 
+
 @admin.register(Mailing)
 class MailingAdmin(admin.ModelAdmin):
     list_display = ('start_time', 'end_time', 'status', 'owner')
     list_filter = ('status', 'owner')
+
 
 @admin.register(MailingLog)
 class MailingLogAdmin(admin.ModelAdmin):
@@ -37,5 +41,6 @@ def setup_manager_group():
         ).first()
         if permission:
             group.permissions.add(permission)
+
 
 setup_manager_group()

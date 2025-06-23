@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group, Permission
-from mailings.models import Client, Message, Mailing
+
 
 class Command(BaseCommand):
     help = 'Создаёт группу "Менеджеры" и добавляет права на просмотр всех клиентов, сообщений и рассылок.'

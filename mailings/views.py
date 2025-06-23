@@ -1,6 +1,6 @@
 from typing import Any
 from django.urls import reverse_lazy
-from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView )
+from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -119,6 +119,7 @@ class MailingListView(LoginRequiredMixin, ListView):
         if user.groups.filter(name='Менеджеры').exists():
             return Mailing.objects.all()
         return Mailing.objects.filter(owner=user)
+
 
 @method_decorator(cache_page(60 * 15), name='dispatch')
 class MailingDetailView(OwnerAccessMixin, DetailView):
