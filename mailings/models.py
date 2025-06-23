@@ -19,6 +19,9 @@ class Client(models.Model):
     class Meta:
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
+        permissions = [
+            ('can_view_all_clients', 'Может просматривать всех клиентов'),
+        ]
 
 
 class Message(models.Model):
@@ -37,6 +40,9 @@ class Message(models.Model):
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
+        permissions = [
+            ('can_view_all_messages', 'Может просматривать все сообщения'),
+        ]
 
 
 class Mailing(models.Model):
@@ -83,8 +89,11 @@ class MailingLog(models.Model):
         return f"[{self.get_status_display()}] {self.attempt_time}"
 
     class Meta:
-        verbose_name = 'Лог рассылки'
-        verbose_name_plural = 'Логи рассылок'
+        verbose_name = 'Рассылка'
+        verbose_name_plural = 'Рассылки'
+        permissions = [
+            ('can_view_all_mailings', 'Может просматривать все рассылки'),
+        ]
 
 
 class Attempt(models.Model):
