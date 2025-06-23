@@ -120,7 +120,7 @@ class MailingListView(LoginRequiredMixin, ListView):
             return Mailing.objects.all()
         return Mailing.objects.filter(owner=user)
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class MailingDetailView(OwnerAccessMixin, DetailView):
     model = Mailing
     template_name = 'mailings/mailing_detail.html'
